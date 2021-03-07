@@ -1,0 +1,5 @@
+better font & no 8 char cache limit
+http://woodsgood.ca/projects/2015/02/17/big-font-lcd-characters/
+
+font generator
+https://www.avrfreaks.net/forum/alphanumeric-lcd-hd44780-big-font-big-digits-generator-excel-sheet
