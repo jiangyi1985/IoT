@@ -41,7 +41,7 @@ void loop() {
   int potValue=analogRead(pin);
   Serial.print("light sensor: ");
   Serial.println(potValue);  
-  isBacklightRequired = potValue < 1500; //turn off backlight if room is too dark
+  isBacklightRequired = potValue < 3000; //turn off backlight if room is too dark
   if(isBacklightRequired)
     lcd.backlight();
   else
