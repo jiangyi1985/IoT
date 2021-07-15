@@ -20,6 +20,7 @@ void setup() {
 
   sevseg.begin(hardwareConfig, numDigits, digitPins, segmentPins, resistorsOnSegments,
   updateWithDelays, leadingZeros, disableDecPoint);
+  //sevseg.setBrightness(150);//a value between -200 and 200. 0 to 100 is the standard range. Numbers greater than 100 and less than -100 may cause noticeable flickering
 }
 
 int digit=0;
