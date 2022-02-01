@@ -1,11 +1,11 @@
 //digit pins (left to right)    --> nodeMCU32s.GPIO 15 12 13 14
-//segment pins (A to G to dot)  --> nodeMCU32s.GPIO 21 22 23 25 26 27 32 33
-//4 x 330Ω resistors
+//segment pins (A to G to dot)  --> nodeMCU32s.GPIO 18 19 23 25 26 27 32 33
+//4 x 330Ω resistors on digit pins
 /* 
  * 连接方式
  * SHTC3    开发板
- * SCL      SCL（NodeMcu-32S开发板是P21）
- * SDA      SDA（NodeMcu-32S开发板是P22）
+ * SDA      SDA（NodeMcu-32S开发板是P21）
+ * SCL      SCL（NodeMcu-32S开发板是P22）
  */
 
 #include "SevSeg.h"
