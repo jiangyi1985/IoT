@@ -1,29 +1,31 @@
 
 unsigned long t,t1,diff;
-int max=0,min=9999;
+int maxV=0,minV=9999;
 
 void setup() {
   Serial.begin(115200);
-    Serial.print(min);
+    Serial.print(minV);
     Serial.print(",");//seperator
-    Serial.println(max);
+    Serial.println(maxV);
 }
 
 void loop() {
   t1 = micros();
   diff = t1-t;
-
-  int v = analogRead(A2);
-  if(max<v){max=v;}
-  if(v<min){min=v;}
+  
+  int v = analogRead(A0); //arduino
+//  int v = analogRead(32); //esp32
+//  Serial.println(v);
+  if(maxV<v){maxV=v;}
+  if(v<minV){minV=v;}
   
   if (diff>20000)
   {
     t=t1;
-    Serial.print(min);
+    Serial.print(minV);
     Serial.print(",");//seperator
-    Serial.println(max);
-    min=9999;
-    max=0;
+    Serial.println(maxV);
+    minV=9999;
+    maxV=0;
   }
 }
