@@ -1,8 +1,9 @@
-/* https://blog.zeruns.tech
+/*
  * 连接方式
  * SHTC3    开发板
- * SCL      SCL（NodeMcu开发板是D1）
- * SDA      SDA（NodeMcu开发板是D2）
+ * SDA      SDA（NodeMcu-32S开发板是P21）
+ * SCL      SCL（NodeMcu-32S开发板是P22）
+ * +        3.3V
  */
 
 #include <SparkFun_SHTC3.h>

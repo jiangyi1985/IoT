@@ -6,6 +6,7 @@
  * SHTC3    开发板
  * SDA      SDA（NodeMcu-32S开发板是P21）
  * SCL      SCL（NodeMcu-32S开发板是P22）
+ * +        3.3V
  */
 
 #include "SevSeg.h"
