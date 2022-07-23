@@ -41,16 +41,18 @@ typedef struct PMSAQIdata {
       particles_25um,      ///< 2.5um Particle Count
       particles_50um,      ///< 5.0um Particle Count
       particles_100um;     ///< 10.0um Particle Count
-  uint16_t unused;         ///< Unused
+  uint16_t unused;         ///< Unused (version + error code)
 
-//when copy data from int8 array to this struct, error code should be before version
-//because arduino is little endian memcpy swap the bytes when copy int16 to 2 int8s?
+//when copy data from int8 array to this struct with memcpy, error_code need to be defined before version
+//otherwise they are swapped.
+//reason is that arduino is little endian and memcpy swap the bytes when copy int16 into the 2 int8s?
+//will manually copy them instead
   // uint8_t error_code;         ///< 
   // uint8_t version;         ///< 
 
   uint16_t checksum;       ///< Packet checksum
 
-  //extra infos:
+  //verbose infos:
   uint16_t datasum;
   uint8_t startbyte_fail;
   uint8_t checksum_fail;
@@ -58,10 +60,10 @@ typedef struct PMSAQIdata {
   uint8_t error_code;
   uint8_t raw[32];
 
-  //AQI conversions:
+  //AQI conversion results:
   uint8_t aqi_pm25_us;//pm2.5 AQI of United States
-  uint8_t aqi_pm25_china;//pm2.5 AQI of China
   uint8_t aqi_pm100_us;//pm10 AQI of United States
+  uint8_t aqi_pm25_china;//pm2.5 AQI of China
   uint8_t aqi_pm100_china;//pm10 AQI of China
 
 } PM25_AQI_Data;
