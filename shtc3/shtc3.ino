@@ -1,9 +1,9 @@
 /* 
  * 连接方式
- * SHTC3    开发板
- * SDA      SDA（NodeMcu-32S开发板是P21）
- * SCL      SCL（NodeMcu-32S开发板是P22）
- * +        3.3V
+ * SHTC3    NodeMcu-32S   NodeMcu-8266
+ * SDA      GPIO21        GPIO04
+ * SCL      GPIO22        GPIO05
+ * +        3.3V          3.3V
  */
 
 #include <SparkFun_SHTC3.h>
@@ -25,19 +25,20 @@ void loop() {
   SHTC3_Status_TypeDef result = mySHTC3.update();
   if(mySHTC3.lastStatus == SHTC3_Status_Nominal)   //判断SHTC3状态是否正常
   {
-    RH = mySHTC3.toPercent();   //读取湿度数据                       
-    T = mySHTC3.toDegC();       //读取温度数据                    
+    RH = mySHTC3.toPercent();   //读取湿度数据
+    T = mySHTC3.toDegC();       //读取温度数据
+
+    Serial.print("Humidity:");  //向串口打印 Humidity:
+    Serial.print(RH);           //向串口打印湿度数据
+    Serial.print("%");
+    Serial.print("  Temperature:");
+    Serial.print(T);            //向串口打印温度数据
+    Serial.println("C"); 
   }else{
     Serial.print("Update failed, error: ");
     errorDecoder(mySHTC3.lastStatus); //输出错误原因
     Serial.println();
   }
-  Serial.print("Humidity:");  //向串口打印 Humidity:
-  Serial.print(RH);           //向串口打印湿度数据
-  Serial.print("%");
-  Serial.print("  Temperature:");
-  Serial.print(T);            //向串口打印温度数据
-  Serial.println("C"); 
 }
 
 void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function prints "SHTC3_Status_TypeDef" resultsin a human-friendly way
