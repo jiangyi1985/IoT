@@ -1,3 +1,10 @@
+/* 
+ * SCD30    NodeMcu-32S   NodeMcu-8266
+ * SDA      GPIO21        GPIO04
+ * SCL      GPIO22        GPIO05
+ * +        5V            5V
+ */
+ 
 /*
   Reading CO2, humidity and temperature from the SCD30
   By: Nathan Seidle
@@ -28,11 +35,10 @@ void setup()
     //Start sensor using the Wire port, but 
     bool autoSelfCalibration = false;//enable auto-calibration?
     bool measureBegin = false;//start measuring immediately?
-    if (airSensor.begin(Wire, autoSelfCalibration, measureBegin) == false)
+    while (airSensor.begin(Wire, autoSelfCalibration, measureBegin) == false)
     {
-        Serial.println("Air sensor not detected. Please check wiring. Freezing...");
-        while (1)
-            ;
+        Serial.println("Air sensor not detected. Retrying...");
+        delay(500) ;
     }
 
     airSensor.StopMeasurement();
