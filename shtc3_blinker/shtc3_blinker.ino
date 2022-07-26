@@ -1,9 +1,9 @@
 /* 
  * 连接方式
- * SHTC3    开发板
- * SDA      SDA（NodeMcu-32S开发板是P21）
- * SCL      SCL（NodeMcu-32S开发板是P22）
- * +        3.3V
+ * SHTC3    NodeMcu-32S   NodeMcu-8266
+ * SDA      GPIO21        GPIO04
+ * SCL      GPIO22        GPIO05
+ * +        3.3V          3.3V
  */
 
 #include <SparkFun_SHTC3.h>

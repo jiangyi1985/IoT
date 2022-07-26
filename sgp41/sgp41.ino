@@ -5,42 +5,6 @@
  * +        3.3V          3.3V
  */
  
-/*
- * I2C-Generator: 0.3.0
- * Yaml Version: 0.1.0
- * Template Version: 0.7.0-62-g3d691f9
- */
-/*
- * Copyright (c) 2021, Sensirion AG
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * * Redistributions of source code must retain the above copyright notice, this
- *   list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
- *
- * * Neither the name of Sensirion AG nor the names of its
- *   contributors may be used to endorse or promote products derived from
- *   this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
-
 #include <Arduino.h>
 #include <SensirionI2CSgp41.h>
 #include <Wire.h>
@@ -50,8 +14,9 @@ SensirionI2CSgp41 sgp41;
 GasIndexAlgorithmParams paramsVoc;
 GasIndexAlgorithmParams paramsNox;
 
-// time in seconds needed for NOx conditioning
-uint16_t conditioning_s = 10;
+//The conditioning heats the hotplate of the NOx pixel to a different temperature compared to the measurement mode enabling a faster switch-on thereafter.
+//It is recommended to execute the conditioning for 10 s, but 10 s must not be exceeded to avoid damage to the sensing material.
+uint16_t conditioning_s = 10; ///< time in seconds needed for NOx conditioning
 
 void setup() {
     GasIndexAlgorithm_init(&paramsVoc, GasIndexAlgorithm_ALGORITHM_TYPE_VOC);
@@ -130,8 +95,12 @@ void loop() {
         errorToString(error, errorMessage, 256);
         Serial.println(errorMessage);
     } else {
-        int32_t voc_index_value; 
+        //In case of the VOC Index, a value of 100 refers to the average indoor gas composition over the past 24 h.
+        //While values between 100 and 500 indicate a deterioration, values between 1 and 100 inform about improvement of the VOC based air quality.
+        int32_t voc_index_value;
+        //In case of the NOx Index, the average condition is mapped to a value of 1 and therefore, the NOx Index displays values between 2 and 500 when NOx events are present.
         int32_t nox_index_value; 
+        
         GasIndexAlgorithm_process(&paramsVoc, srawVoc, &voc_index_value);
         if(srawNox!=0)
           GasIndexAlgorithm_process(&paramsNox, srawNox, &nox_index_value);
