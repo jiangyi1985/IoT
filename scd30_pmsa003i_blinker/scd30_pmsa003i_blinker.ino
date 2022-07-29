@@ -133,7 +133,7 @@ void dataStorage(){//在回调函数中，设定要存储的键名和值 //键�
 //   Blinker.dataStorage("num-pm25conc-env", PM25CONCenv);
 //   Blinker.dataStorage("num-pm100conc-env", PM100CONCenv);
    Blinker.dataStorage("num-pm25aqi-us", PM25AQIus);
-   Blinker.dataStorage("num-pm100aqi-us", PM100AQIus);
+//   Blinker.dataStorage("num-pm100aqi-us", PM100AQIus);
 //   Blinker.dataStorage("num-pm25aqi-cn", PM25AQIchina);
 //   Blinker.dataStorage("num-pm100aqi-cn", PM100AQIchina);
    
@@ -145,10 +145,10 @@ void dataStorage(){//在回调函数中，设定要存储的键名和值 //键�
 //   Blinker.dataStorage("num-part100", PART100);
 
 //   Blinker.dataStorage("num-part03-25", PART03-PART25);
-   Blinker.dataStorage("num-part03-05", PART03-PART05);
-   Blinker.dataStorage("num-part05-25", PART05-PART25);
-   Blinker.dataStorage("num-part25-100", PART25-PART100);
-   Blinker.dataStorage("num-part100", PART100);
+//   Blinker.dataStorage("num-part03-05", PART03-PART05);
+//   Blinker.dataStorage("num-part05-25", PART05-PART25);
+//   Blinker.dataStorage("num-part25-100", PART25-PART100);
+//   Blinker.dataStorage("num-part100", PART100);
 }
 
 void heartbeat(){

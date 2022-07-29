@@ -13,8 +13,8 @@ void loop() {
   t1 = micros();
   diff = t1-t;
   
-  int v = analogRead(A0); //arduino
-//  int v = analogRead(32); //esp32
+//  int v = analogRead(A0); //arduino
+  int v = analogRead(32); //esp32
 //  Serial.println(v);
   if(maxV<v){maxV=v;}
   if(v<minV){minV=v;}
