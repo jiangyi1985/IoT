@@ -23,7 +23,7 @@
 
 #include <Wire.h>
 
-#include "SparkFun_SCD30_Arduino_Library.h" //Click here to get the library: http://librarymanager/All#SparkFun_SCD30
+#include "SparkFun_SCD30_Arduino_Library.h" //https://github.com/sparkfun/SparkFun_SCD30_Arduino_Library
 SCD30 airSensor;
 
 void setup()

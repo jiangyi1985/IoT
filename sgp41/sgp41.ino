@@ -6,9 +6,9 @@
  */
  
 #include <Arduino.h>
-#include <SensirionI2CSgp41.h>
+#include <SensirionI2CSgp41.h>//https://github.com/Sensirion/arduino-i2c-sgp41
 #include <Wire.h>
-#include <SensirionGasIndexAlgorithm.h>
+#include <SensirionGasIndexAlgorithm.h>//https://github.com/Sensirion/arduino-gas-index-algorithm
 
 SensirionI2CSgp41 sgp41;
 GasIndexAlgorithmParams paramsVoc;

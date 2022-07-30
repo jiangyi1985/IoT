@@ -2,7 +2,7 @@
 //segment pins (A to G to dot)  --> nodeMCU32s.GPIO 21 22 23 25 26 27 32 33
 //4 x 330Ω resistors
 
-#include "SevSeg.h"
+#include "SevSeg.h"//https://github.com/DeanIsMe/SevSeg
 
 SevSeg sevseg; //Instantiate a seven segment object
 
