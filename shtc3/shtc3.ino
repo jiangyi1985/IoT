@@ -17,6 +17,9 @@ void setup(){ //初始化函数，只在程序开始时运行一次
   Wire.begin();           //初始化Wire（IIC）库
   unsigned char i=0;
   errorDecoder(mySHTC3.begin());// To start the sensor you must call "begin()", the default settings use Wire (default Arduino I2C port)
+
+  //some cheap shtc3 from taobao cannot work (wrong rh output) in RH first mode (with clock stretching, for both NPM/LPM), and they have wrong ID register: 8432 (0b0010000011110000)
+  mySHTC3.setMode(SHTC3_CMD_CSE_TF_NPM);
 }
 
 void loop() {
@@ -48,6 +51,8 @@ void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function pri
     case SHTC3_Status_Nominal : Serial.print("Nominal"); break;
     case SHTC3_Status_Error : Serial.print("Error"); break;
     case SHTC3_Status_CRC_Fail : Serial.print("CRC Fail"); break;
+    case SHTC3_Status_ID_Fail : Serial.print("Check ID Fail"); break;
     default : Serial.print("Unknown return code"); break;
   }
+  Serial.println();
 }
