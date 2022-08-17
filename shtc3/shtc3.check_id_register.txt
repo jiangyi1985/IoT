@@ -1,0 +1,146 @@
+#include <Wire.h>
+
+#define SHTC3_ADDRESS 0x70  //定义SHTC3的I2C器件地址为0x70
+float T,RH;
+
+void setup() {    //初始化函数，只在程序开始时运行一次
+  Serial.begin(115200);   //设置串口波特率
+  Wire.begin();   //初始化为I2C主机
+}
+
+void loop() {
+  delay(1000);
+  SHTC3();
+  Serial.print("RH: ");
+  Serial.print(RH);
+  Serial.print("%");
+  Serial.print("\tTemp: ");
+  Serial.print(T);
+  Serial.println("C"); 
+}
+
+void SHTC3(){
+  Wire.beginTransmission(SHTC3_ADDRESS); //地址0x70
+  Wire.write(byte(0xE0));       //write header
+  Wire.endTransmission();
+  Wire.beginTransmission(SHTC3_ADDRESS);
+  Wire.write(byte(0x35));       //发送唤醒指令的高位部分
+  Wire.write(byte(0x17));       //发送唤醒指令的低位部分
+  Wire.endTransmission();
+  delayMicroseconds(300);       //延时300微秒
+
+  Wire.beginTransmission(SHTC3_ADDRESS);
+  Wire.write(byte(0xE0));
+  Wire.endTransmission();
+  Wire.beginTransmission(SHTC3_ADDRESS);
+  Wire.write(byte(0xEF));       //发送id指令的高位部分
+  Wire.write(byte(0xC8));       //发送id指令的低位部分
+  Wire.endTransmission();
+
+  //正品盛思锐 ID bin:100010000111 dec:2183 ID_CRC:91
+  //淘宝便宜货 ID bin:10000011110000 dec:8432 ID_CRC:223
+  
+  //正品读取id不需要这一段
+//  Wire.beginTransmission(SHTC3_ADDRESS);
+//  Wire.write(byte(0xE1));       //read header
+//  Wire.endTransmission();
+
+  Wire.requestFrom(SHTC3_ADDRESS,3);
+  uint16_t ID_temp,ID_CRC;
+//  Serial.println(Wire.available());
+  if (2 <= Wire.available()) {
+    ID_temp = Wire.read();
+    ID_temp = ID_temp << 8;
+    ID_temp |= Wire.read();
+    ID_CRC = Wire.read();
+    Serial.print("ID bin:");Serial.print(ID_temp,BIN);Serial.print(" dec:");Serial.print(ID_temp);  Serial.print(" ID_CRC:");Serial.print(ID_CRC);Serial.println();
+    if(SHTC3_CRC_CHECK(ID_temp,ID_CRC)){
+    }
+    else{
+      Serial.println("id crc fail");
+    }
+  }
+  
+  Wire.beginTransmission(SHTC3_ADDRESS);
+  Wire.write(byte(0xE0));
+  Wire.endTransmission();
+  Wire.beginTransmission(SHTC3_ADDRESS);
+//  Wire.write(byte(0x7c));//normal, t first, clock stretching
+//  Wire.write(byte(0xa2));
+//  Wire.write(byte(0x5c));//normal, rh first, clock stretching
+//  Wire.write(byte(0x24));
+  Wire.write(byte(0x78));//normal, t first, clock stretching disabled
+  Wire.write(byte(0x66));
+//  Wire.write(byte(0x58));//normal, rh first, clock stretching disabled
+//  Wire.write(byte(0xe0));
+//  Wire.write(byte(0x64));//low p, t first, clock stretching
+//  Wire.write(byte(0x58));
+//  Wire.write(byte(0x44));//low p, rh first, clock stretching
+//  Wire.write(byte(0xde));
+//  Wire.write(byte(0x60));//low p, t first, clock stretching disabled
+//  Wire.write(byte(0x9c));
+//  Wire.write(byte(0x40));//low p, rh first, clock stretching disabled
+//  Wire.write(byte(0x1a));
+  Wire.endTransmission();
+
+  //正品clock stretching时不能有这句
+  //淘宝clock stretching is DISABLED时需要这句 enable时无所谓
+  delay(50);//wait for measurement this is IMPORTANT when clock stretching is DISABLED
+  
+  Wire.beginTransmission(SHTC3_ADDRESS);
+  Wire.write(byte(0xE1));//read header
+  Wire.endTransmission();
+  Wire.requestFrom(SHTC3_ADDRESS,6);
+  uint16_t T_temp,RH_temp,T_CRC,RH_CRC;
+  if (2 <= Wire.available()) {
+    T_temp = Wire.read();
+    T_temp = T_temp << 8;
+    T_temp |= Wire.read();
+    T_CRC = Wire.read();
+    if(SHTC3_CRC_CHECK(T_temp,T_CRC)){
+      T =float(T_temp) * 175 / 65536 - 45;  //计算出温度
+    }
+  }
+  if (2 <= Wire.available()) {
+    RH_temp = Wire.read();
+    RH_temp = RH_temp << 8;
+    RH_temp |= Wire.read();
+    RH_CRC = Wire.read();
+    if(SHTC3_CRC_CHECK(RH_temp,RH_CRC)){
+      RH =float(RH_temp) * 100 / 65536;
+    }
+  }
+}
+
+uint8_t SHTC3_CRC_CHECK(uint16_t DAT,uint8_t CRC_DAT)
+{
+    uint8_t i,t,temp;
+    uint8_t CRC_BYTE;  
+    CRC_BYTE = 0xFF;  
+    temp = (DAT>>8) & 0xFF;        
+    for(t = 0;t < 2;t ++)
+    {
+        CRC_BYTE ^= temp;
+        for(i = 0;i < 8;i ++)
+        {
+            if(CRC_BYTE & 0x80)
+            {
+                CRC_BYTE <<= 1;                
+                CRC_BYTE ^= 0x31;    
+            }else{
+                CRC_BYTE <<= 1;    
+            }
+        }        
+        if(t == 0)
+        {
+            temp = DAT & 0xFF; 
+        }
+    }
+    if(CRC_BYTE == CRC_DAT)
+    {
+        temp = 1;    
+    }else{
+        temp = 0;    
+    }   
+    return temp;
+}
