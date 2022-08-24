@@ -85,7 +85,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+	HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_SET);
+	int times=1;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -93,7 +94,18 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		for(int i=0;i<times;i++)
+		{
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_RESET);//led on
+			HAL_Delay(100);
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_SET);//led off
+			HAL_Delay(100);
+		}
+		
+		if(times>=4) times=1;
+		else times++;
+		
+		HAL_Delay(1000);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
