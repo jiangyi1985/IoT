@@ -91,19 +91,13 @@ void loop()
 
 void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function prints "SHTC3_Status_TypeDef" resultsin a human-friendly way
 {
-  switch (message)
+  switch(message)
   {
-  case SHTC3_Status_Nominal:
-    Serial.print("Nominal");
-    break;
-  case SHTC3_Status_Error:
-    Serial.print("Error");
-    break;
-  case SHTC3_Status_CRC_Fail:
-    Serial.print("CRC Fail");
-    break;
-  default:
-    Serial.print("Unknown return code");
-    break;
+    case SHTC3_Status_Nominal : Serial.print("Nominal"); break;
+    case SHTC3_Status_Error : Serial.print("Error"); break;
+    case SHTC3_Status_CRC_Fail : Serial.print("CRC Fail"); break;
+    case SHTC3_Status_ID_Fail : Serial.print("Check ID Fail"); break;
+    default : Serial.print("Unknown return code"); break;
   }
+  Serial.println();
 }

@@ -1,9 +1,9 @@
 /* 
  * 连接方式
- * SHTC3    NodeMcu-32S   NodeMcu-8266
- * SDA      GPIO21        GPIO04
- * SCL      GPIO22        GPIO05
- * +        3.3V          3.3V
+ * SHTC3    NodeMcu-32S   NodeMcu-8266  BW16kit-v1.0
+ * SDA      GPIO21        GPIO04        PA26
+ * SCL      GPIO22        GPIO05        PA25
+ * +        3.3V          3.3V          3.3V
  */
 
 #include <SparkFun_SHTC3.h>
@@ -75,6 +75,8 @@ void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function pri
     case SHTC3_Status_Nominal : Serial.print("Nominal"); break;
     case SHTC3_Status_Error : Serial.print("Error"); break;
     case SHTC3_Status_CRC_Fail : Serial.print("CRC Fail"); break;
+    case SHTC3_Status_ID_Fail : Serial.print("Check ID Fail"); break;
     default : Serial.print("Unknown return code"); break;
   }
+  Serial.println();
 }

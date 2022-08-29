@@ -1,8 +1,7 @@
-// scd30    bmp180(GY-68) NodeMcu-32S
-// SDA      sda           GPIO21
-// SCL      scl           GPIO22
-// +                      5V/3.3V
-//          vcc           5V
+// scd30    bmp180(GY-68) NodeMcu-32S   NodeMcu-8266
+// SDA      sda           GPIO21        GPIO04 //ai-thinker nodemcu8266 onboard rgb-R led will be lit
+// SCL      scl           GPIO22        GPIO05 //ai-thinker nodemcu8266 onboard rgb-B led will be lit
+// +(5/3.3) vcc           5V            5v
 //          3.3v
 
 #include <Wire.h>
@@ -32,6 +31,7 @@ void setup()
     {
     };
     Wire.begin();
+//    Wire.begin(12, 13); // on nodemcu8266 use gpio 12-sda 13-scl so that the rbg-R,B won't lit
 
     if (airSensor.begin() == false)
     {

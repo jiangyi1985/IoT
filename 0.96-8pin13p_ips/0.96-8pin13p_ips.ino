@@ -1,3 +1,11 @@
+//TFT80x160 UNO NodeMCU-32S
+//SCL       13  18
+//SDA       11  23
+//RST       9   16
+//DC        8   17
+//CS        10  SS(5)
+//BLK
+
 /**************************************************************************
   This is a library for several Adafruit displays based on ST77* drivers.
   Works with the Adafruit 1.8" TFT Breakout w/SD card
