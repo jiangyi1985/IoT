@@ -1,0 +1,4 @@
+SHT41 bear pcb 0xF5FDAF9
+SHT40 bear pcb 0xFA85CC6
+
+SHT40 white cover 0xFA8B919
