@@ -1,11 +1,3 @@
-/*************************************************** 
-  This is an example for the SHT4x Humidity & Temp Sensor
-  Designed specifically to work with the SHT4x sensor from Adafruit
-  ----> https://www.adafruit.com/products/4885
-  These sensors use I2C to communicate, 2 pins are required to  
-  interface
- ****************************************************/
-
 #include "Adafruit_SHT4x.h"//https://github.com/adafruit/Adafruit_SHT4X
 
 Adafruit_SHT4x sht41 = Adafruit_SHT4x();
