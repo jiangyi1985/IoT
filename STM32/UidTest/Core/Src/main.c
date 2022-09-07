@@ -95,7 +95,11 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+		GPIO_PinState state = HAL_GPIO_ReadPin(PA1_GPIO_Port,PA1_Pin);
+		if(state== GPIO_PIN_SET)
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_RESET);//low = led on
+		else
+			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_SET);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
