@@ -20,6 +20,7 @@
 #include "main.h"
 #include "usb_device.h"
 #include "gpio.h"
+#include "usbd_hid.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -43,7 +44,15 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+/*
+字节1：无符号字符型，低三位分别表示鼠标的左、右、中键是否被按下，1按下，0抬起。
+字节2：有符号字符型，表示鼠标在x方向的移动。
+字节3：有符号字符型，表示鼠标在y方向的移动。
+字节4：有符号字符型，表示鼠标滚轮的移动。
+*/
+uint8_t MouseData01[4] = {0,0,0,0};
+GPIO_PinState lastState = GPIO_PIN_RESET;
+extern USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,7 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -96,10 +105,23 @@ int main(void)
   {
     /* USER CODE END WHILE */
 		GPIO_PinState state = HAL_GPIO_ReadPin(PA1_GPIO_Port,PA1_Pin);
-		if(state== GPIO_PIN_SET)
+		
+		if(state == GPIO_PIN_SET)
 			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_RESET);//low = led on
 		else
 			HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_SET);
+		
+		if(state != lastState)
+		{
+			if(state == GPIO_PIN_SET) //switch pressed
+				MouseData01[0] = 0b00000001; // |0 0 0 0|0 middle right left| //https://www.usb.org/sites/default/files/hid1_11.pdf
+			else
+				MouseData01[0] = 0b00000000;
+			
+			USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&MouseData01,sizeof(MouseData01));
+			
+			lastState = state;
+		}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
