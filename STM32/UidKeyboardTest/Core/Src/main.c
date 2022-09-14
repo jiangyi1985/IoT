@@ -43,19 +43,46 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-typedef struct
-{
-	uint8_t MODIFIER;
-	uint8_t RESERVED;
-	uint8_t KEYCODE1;
-	uint8_t KEYCODE2;
-	uint8_t KEYCODE3;
-	uint8_t KEYCODE4;
-	uint8_t KEYCODE5;
-	uint8_t KEYCODE6;
-} keyboardHID;
-keyboardHID keyboardhid = {0,0,0,0,0,0,0,0};
+//typedef struct
+//{
+//	uint8_t MODIFIER;
+//	uint8_t RESERVED;
+//	uint8_t KEYCODE1;
+//	uint8_t KEYCODE2;
+//	uint8_t KEYCODE3;
+//	uint8_t KEYCODE4;
+//	uint8_t KEYCODE5;
+//	uint8_t KEYCODE6;
+//} keyboardHID;
+//keyboardHID keyboardhid = {0,0,0,0,0,0,0,0};
+
 extern USBD_HandleTypeDef hUsbDeviceFS;
+
+typedef struct 
+{
+    uint8_t report_id;
+    uint8_t modifier;
+    uint8_t reserved;
+    uint8_t keycode[6];
+} keyboard_report_t;
+
+typedef struct 
+{
+    uint8_t report_id;
+    uint8_t buttons;
+    int8_t x;
+    int8_t y;
+} mouse_report_t;
+
+typedef struct 
+{
+    uint8_t report_id;
+    uint8_t buttons;
+} consumer_report_t;
+
+keyboard_report_t keyboardRpt = {1,0,0,0,0,0,0,0,0};
+mouse_report_t mouseRpt = {2,0,0,0};
+consumer_report_t consumerRpt = {3,0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -99,9 +126,9 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-	
-uint8_t isPressed = 0;//rotary between clicks or clicked
-uint8_t status = 0;// rotary rotating status:		1:clockwise		2:counter-clockwise
+
+	uint8_t isPressed = 0;//rotary between clicks or clicked
+	uint8_t status = 0;// rotary rotating status:		1:clockwise		2:counter-clockwise
 
   /* USER CODE END 2 */
 
@@ -131,16 +158,27 @@ uint8_t status = 0;// rotary rotating status:		1:clockwise		2:counter-clockwise
 		{
 			if(isPressed==1)//release from pressed
 			{
-				if(status==1)
-					keyboardhid.KEYCODE1=0x4f;
-				else if(status==2)
-					keyboardhid.KEYCODE1=0x50;
+//				//Keyboard
+//				if(status==1)
+//					keyboardRpt.keycode[0]=0x4f;//RightArrow
+//				else if(status==2)
+//					keyboardRpt.keycode[0]=0x50;//LeftArrow
+//				//press key and release
+//				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&keyboardRpt,sizeof(keyboardRpt));
+//				HAL_Delay(50);
+//				keyboardRpt.keycode[0]=0;
+//				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&keyboardRpt,sizeof(keyboardRpt));
 				
+				//Consumer Device
+				if(status==1)
+					consumerRpt.buttons=0b01000000;//VolumeIncrement
+				else if(status==2)
+					consumerRpt.buttons=0b10000000;//VolumeDecrement
 				//press key and release
-				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&keyboardhid,sizeof(keyboardhid));
+				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
 				HAL_Delay(50);
-				keyboardhid.KEYCODE1=0;
-				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&keyboardhid,sizeof(keyboardhid));
+				consumerRpt.buttons=0;
+				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
 			}
 			
 			isPressed=0;
