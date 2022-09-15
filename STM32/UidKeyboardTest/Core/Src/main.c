@@ -72,6 +72,8 @@ typedef struct
     uint8_t buttons;
     int8_t x;
     int8_t y;
+		int8_t wheel;
+		int8_t pan;
 } mouse_report_t;
 
 typedef struct 
@@ -81,7 +83,7 @@ typedef struct
 } consumer_report_t;
 
 keyboard_report_t keyboardRpt = {1,0,0,0,0,0,0,0,0};
-mouse_report_t mouseRpt = {2,0,0,0};
+mouse_report_t mouseRpt = {2,0,0,0,0,0};
 consumer_report_t consumerRpt = {3,0};
 /* USER CODE END PV */
 
@@ -169,16 +171,39 @@ int main(void)
 //				keyboardRpt.keycode[0]=0;
 //				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&keyboardRpt,sizeof(keyboardRpt));
 				
-				//Consumer Device
+//				//Consumer Device
+//				if(status==1)
+//					consumerRpt.buttons=0b01000000;//VolumeIncrement
+//				else if(status==2)
+//					consumerRpt.buttons=0b10000000;//VolumeDecrement
+//				//press key and release
+//				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
+//				HAL_Delay(50);
+//				consumerRpt.buttons=0;
+//				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
+				
+				//Mouse
 				if(status==1)
-					consumerRpt.buttons=0b01000000;//VolumeIncrement
+				{
+//					mouseRpt.buttons=0b00000001;
+//					mouseRpt.x=10;
+//					mouseRpt.y=10;
+//					mouseRpt.wheel=1;
+					mouseRpt.pan=1;
+				}
 				else if(status==2)
-					consumerRpt.buttons=0b10000000;//VolumeDecrement
+				{
+//					mouseRpt.buttons=0b00000010;
+//					mouseRpt.x=-10;
+//					mouseRpt.y=-10;
+//					mouseRpt.wheel=-1;
+					mouseRpt.pan=-1;
+				}
 				//press key and release
-				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
-				HAL_Delay(50);
-				consumerRpt.buttons=0;
-				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&consumerRpt,sizeof(consumerRpt));
+				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&mouseRpt,sizeof(mouseRpt));
+//				HAL_Delay(50);
+//				mouseRpt.buttons=0b00000000;
+//				USBD_HID_SendReport(&hUsbDeviceFS,(uint8_t*)&mouseRpt,sizeof(mouseRpt));
 			}
 			
 			isPressed=0;

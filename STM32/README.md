@@ -5,6 +5,7 @@ https://www.bilibili.com/video/BV1fD4y1m73i?vd_source=9bba683942ff36be6d0046de9c
 
 HID mouse
 https://mp.weixin.qq.com/s/96A5qT8q-61RyOBYWAM6bA
+https://zhuanlan.zhihu.com/p/41960639
 
 HID keyboard
 https://controllerstech.com/how-to-use-stm32-as-a-keyboard/
