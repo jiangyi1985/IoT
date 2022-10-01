@@ -14,7 +14,8 @@ int signalA[29]={0,0,0,0,0,1,0,1,
 0,0,1,0,1,1,0,0,
 1,1,1,0,1,1,1,0,
 0,1,0,1,0};
-int signalB[14]={0,0,0,0,0,1,0,1,
+
+int signalB[14]={0,0,0,0,0,1,0,1,//probably not needed, same as signalA
 0,0,1,0,1,1};
 
 int fosc_us=133;//microseconds time of 1/3 bit symbol
