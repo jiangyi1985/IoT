@@ -37,7 +37,7 @@ void setup()
 
   Blinker.begin(auth, ssid, pswd);        // start blinker wifi mode
   Blinker.attachHeartbeat(heartbeat);     // app定时向设备发送心跳包, 设备收到心跳包后会返回设备当前状态，如果用户有自定义状态需要在收到心跳包时返回, 可调用该函数
-  Blinker.attachDataStorage(dataStorage); //关联回调函数，开启历史数据存储功能
+  //Blinker.attachDataStorage(dataStorage); //关联回调函数，开启历史数据存储功能
 }
 
 float RH, T;
@@ -90,8 +90,8 @@ void dataStorage()
 
 void heartbeat()
 {
-  // Serial.println("Blinker heartbeat received.");
-  // Blinker.print("temp", T, "°C");
+   Serial.println("Blinker heartbeat received.");
+   Blinker.print("temp", T, "°C");
   NumberTemp.print(T); // send blinker number data to app
   NumberRh.print(RH);
   NumberCo2.print(CO2);

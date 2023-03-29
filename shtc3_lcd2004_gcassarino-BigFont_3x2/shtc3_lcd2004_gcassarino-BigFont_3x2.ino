@@ -82,7 +82,6 @@ void loop() {
   Serial.print("  Temperature:");
   Serial.print(T);            //向串口打印温度数据
   Serial.println("C"); 
-//  Serial.println("https://blog.zeruns.tech");
 
 //lcd.setCursor(0,0);
 //  lcd.print(T);

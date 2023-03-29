@@ -27,15 +27,34 @@ void setup()
 #else
 	;
 #endif
+
+//  pinMode(32,OUTPUT);
+
+  pinMode(35,INPUT);
+  pinMode(LED_BUILTIN,OUTPUT);
 }
 
 void loop()
 {
+    int r=digitalRead(35);
+    
     const char *msg = "hello world!";
+
+    if(r==0)
+    {
+//      digitalWrite(32,LOW);
+      digitalWrite(LED_BUILTIN,LOW);
+    }
+    else
+    {
 #ifdef RH_HAVE_SERIAL
          Serial.println("Sending...");
 #endif
-    driver.send((uint8_t *)msg, strlen(msg));
-    driver.waitPacketSent();
-    delay(1000);
+
+//      digitalWrite(LED_BUILTIN,HIGH);
+
+      driver.send((uint8_t *)msg, strlen(msg));
+      driver.waitPacketSent();
+//      digitalWrite(32,HIGH);
+    }
 }

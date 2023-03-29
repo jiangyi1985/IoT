@@ -191,6 +191,7 @@ void loop()
         Serial.println();
     }
 
+    Serial.println();
     Blinker.run(); //此函数需要频繁调用以保持设备间连接及处理收到的数据, 建议放在 loop() 函数中
 }
 
@@ -198,8 +199,8 @@ void dataStorage()
 {                                       //在回调函数中，设定要存储的键名和值
     Blinker.dataStorage("num-temp", T); //键值可以跟blinker number一样或者不一样
     Blinker.dataStorage("num-rh", RH);
-    //   Blinker.dataStorage("num-voc-raw", srawVoc);
-    //   Blinker.dataStorage("num-nox-raw", srawNox);
+    if (srawVoc != 0) Blinker.dataStorage("num-voc-raw", srawVoc);
+    if (srawNox != 0) Blinker.dataStorage("num-nox-raw", srawNox);
     Blinker.dataStorage("num-voc", voc_index_value);
     Blinker.dataStorage("num-nox", nox_index_value);
 }

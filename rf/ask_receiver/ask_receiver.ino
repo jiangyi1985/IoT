@@ -27,8 +27,11 @@ void setup()
 #else
 	;
 #endif
+
+  pinMode(LED_BUILTIN,OUTPUT);
 }
 
+long lastReceived=0;
 void loop()
 {
     uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
@@ -36,18 +39,28 @@ void loop()
 
     if (driver.recv(buf, &buflen)) // Non-blocking
     {
-	int i;
+      
+      
+    	int i;
+    
+    	// Message with a good checksum received, dump it.
+    	driver.printBuffer("Got:", buf, buflen);
 
-	// Message with a good checksum received, dump it.
-	driver.printBuffer("Got:", buf, buflen);
+      lastReceived=millis();
+      
+      #ifdef RH_HAVE_SERIAL
+      //    Serial.println(buflen);
+          for(int i=0;i<buflen;i++)
+          {
+            Serial.print((char)buf[i]);
+          }
+          Serial.println();
+      #endif
+      
+    }
 
-#ifdef RH_HAVE_SERIAL
-//    Serial.println(buflen);
-    for(int i=0;i<buflen;i++)
-    {
-      Serial.print((char)buf[i]);
-    }
-    Serial.println();
-#endif
-    }
+    if(millis()-lastReceived<200)
+      digitalWrite(LED_BUILTIN,HIGH);
+    else
+      digitalWrite(LED_BUILTIN,LOW);
 }

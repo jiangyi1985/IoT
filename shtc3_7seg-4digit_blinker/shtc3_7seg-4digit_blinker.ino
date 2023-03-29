@@ -49,7 +49,7 @@ void setup()
 
   Blinker.begin(auth, ssid, pswd);//start blinker wifi mode
   Blinker.attachHeartbeat(heartbeat);//app定时向设备发送心跳包, 设备收到心跳包后会返回设备当前状态，如果用户有自定义状态需要在收到心跳包时返回, 可调用该函数
-  Blinker.attachDataStorage(dataStorage);//关联回调函数，开启历史数据存储功能
+//  Blinker.attachDataStorage(dataStorage);//关联回调函数，开启历史数据存储功能
   //bool result = Blinker.connect();
   //Serial.print("Blinker connect result: "+result);
 }
@@ -99,12 +99,12 @@ void loop()
       errorDecoder(mySHTC3.lastStatus); //输出错误原因
       Serial.println();
     }
-    // Serial.print("Humidity:"); //向串口打印 Humidity:
-    // Serial.print(RH);          //向串口打印湿度数据
-    // Serial.print("%");
-    // Serial.print("  Temperature:");
-    // Serial.print(T); //向串口打印温度数据
-    // Serial.println("C");
+    Serial.print("Humidity:"); //向串口打印 Humidity:
+    Serial.print(RH);          //向串口打印湿度数据
+    Serial.print("%");
+    Serial.print("  Temperature:");
+    Serial.print(T); //向串口打印温度数据
+    Serial.println("C");
 
     if (isTemp)
       sevseg.setNumberF(T, 2);

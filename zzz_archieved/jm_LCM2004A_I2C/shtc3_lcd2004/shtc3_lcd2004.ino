@@ -27,7 +27,7 @@ void setup(){ //初始化函数，只在程序开始时运行一次
 //  lcd.backlight();
 //  lcd.init();
 }
-//https://blog.zeruns.tech
+
 void loop() {
   float RH,T;
   delay(1000);                  //延时1000毫秒
@@ -47,7 +47,6 @@ void loop() {
   Serial.print("  Temperature:");
   Serial.print(T);            //向串口打印温度数据
   Serial.println("C"); 
-//  Serial.println("https://blog.zeruns.tech");
 
 lcd.setCursor(0,0);
   lcd.print(T);
@@ -65,6 +64,8 @@ void errorDecoder(SHTC3_Status_TypeDef message) // The errorDecoder function pri
     case SHTC3_Status_Nominal : Serial.print("Nominal"); break;
     case SHTC3_Status_Error : Serial.print("Error"); break;
     case SHTC3_Status_CRC_Fail : Serial.print("CRC Fail"); break;
+    case SHTC3_Status_ID_Fail : Serial.print("Check ID Fail"); break;
     default : Serial.print("Unknown return code"); break;
   }
+  Serial.println();
 }
