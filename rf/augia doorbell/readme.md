@@ -1,0 +1,3 @@
+I import the .C16 file recorded by portapack (at 500khz sample rate) into Audadity (at 384khz) and export a .wav file. Then I open the wave in URH and start analyzing.
+
+When I use high sample rate and zoom in in URH, the waveform looks unusual. But when I lower the sample rate in Audacity before exporting, the waveform looks more like an ASK/OOK. I wonder what's the better practice here when analyzing signals?
