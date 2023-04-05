@@ -43,6 +43,12 @@
 //    Page mode (This is the U8glib picture loop)
 //    U8x8, character only mode
 
+//----------------------------------NodeMCU SPI PINs-----------------------------
+// SPI	MOSI	  MISO	  SCLK	  CS
+// VSPI	GPIO 23	GPIO 19	GPIO 18	GPIO 5        esp32 default to VSPI (usually, when not specified, the board will use the VSPI pins when initializing an SPI communication with the default settings)
+// HSPI	GPIO 13	GPIO 12	GPIO 14	GPIO 15
+//U8G2_SSD1309_128X64_NONAME0_1_4W_HW_SPI(const u8g2_cb_t *rotation, uint8_t cs, uint8_t dc, uint8_t reset = U8X8_PIN_NONE)
+
 //U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0);//full buffer mode
 U8G2_SSD1309_128X64_NONAME0_1_4W_HW_SPI u8g2(U8G2_R0,5,17,16);//page buffer mode  //U8G2_SSD1306_128X64_NONAME_1_HW_I2C(rotation, [reset [, clock, data]]) [page buffer, size = 128 bytes]
 //U8X8_SSD1306_128X64_NONAME_HW_I2C u8x8(U8X8_PIN_NONE,SCL,SDA); //u8x8 mode  //U8X8_SSD1306_128X64_NONAME_HW_I2C([reset [, clock, data]])
