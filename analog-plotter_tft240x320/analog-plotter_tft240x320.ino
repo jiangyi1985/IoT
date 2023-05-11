@@ -149,8 +149,8 @@ void loop() {
 
     //------------print to display
     // Serial.print(maxV/10);Serial.print(" ");Serial.print(minV/10);
-    int maxY=maxV/2900*240;
-    int minY=minV/2900*240;
+    int maxY=maxV/4096*240;
+    int minY=minV/4096*240;
 
     //different kinds of chart:
 
@@ -169,8 +169,8 @@ void loop() {
     {
       tft.drawLine(x,0,x,239,ST77XX_BLACK);
       
-      tft.drawLine(x-1,lastMax,x,maxY,ST77XX_WHITE);
-      tft.drawLine(x-1,lastMin,x,minY,ST77XX_WHITE);
+      tft.drawLine(x-1,239-lastMax,x,239-maxY,ST77XX_WHITE);
+      tft.drawLine(x-1,239-lastMin,x,239-minY,ST77XX_WHITE);
     }
     else
     {

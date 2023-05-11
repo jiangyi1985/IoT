@@ -86,7 +86,7 @@ short lastMinV[320];
 short lastMax = 0, lastMin = 0;
 
 void loop() {
-  int tStart=millis();
+  // int tStart=millis();
 
   /*SAMPLING*/
   microseconds = micros();//Overflows after around 70 minutes!
@@ -99,20 +99,47 @@ void loop() {
     microseconds += sampling_period_us;
   }
 
-  int tEnd=millis();
-  Serial.println(tEnd-tStart);
+  // int tEnd=millis();
+  // Serial.println(tEnd-tStart);
 
   FFT = arduinoFFT(vReal, vImag, samples, samplingFrequency); /* Create FFT object */
   FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);            /* Weigh data */
   FFT.Compute(FFT_FORWARD);                                   /* Compute FFT */
   FFT.ComplexToMagnitude();                                   /* Compute magnitudes */
 
-  //----print to screen-----
-  tft.drawLine(x, 0, x, 239, ST77XX_BLACK);  //clear vertical line
+  int xMultiplier=1;//set this to something > 1 to print same data to multiple x so that the chart timeline looks faster
+  for(int k=0;k<xMultiplier;k++)
+  {
+    //----print to screen-----
+    tft.drawLine(x, 0, x, 239, ST77XX_BLACK);  //clear vertical line
 
-  //there are samples/2 magnitude data
-  for (int y = 239; y >= 0; y--) {
-    tft.drawPixel(x, y, vReal[239 - y]);
+    //there are samples/2 magnitude data
+    //ranged from 0 hz to samplingFrequency / 2 hz
+
+    if(samples==512)
+    {
+      //sample 512, mag 256, y240
+      for (int y = 239; y >= 0; y--) {
+        tft.drawPixel(x, y, vReal[239 - y]);
+      }
+    }
+    else if (samples==256)
+    {
+      //sample 256, mag 128, y120
+      for (int y = 239; y >= 0; y=y-2) {
+        tft.drawPixel(x, y, vReal[119 - (y-1)/2]);
+        tft.drawPixel(x, y-1, vReal[119 - (y-1)/2]);
+      }
+    }
+    else if (samples==128)
+    {
+      //sample 128, mag 64, y60
+      for (int y = 239; y >= 0; y=y-4) {
+        tft.drawLine(x, y,x,y+3, vReal[60 - (y+1)/4]);
+      }
+    }
+
+    if(k!=xMultiplier-1) x++;
   }
 
   x++;
