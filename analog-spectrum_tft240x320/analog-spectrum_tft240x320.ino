@@ -12,6 +12,11 @@
 #include <SPI.h>
 #include "arduinoFFT.h"  //https://github.com/kosme/arduinoFFT
 
+#define SCL_INDEX 0x00
+#define SCL_TIME 0x01
+#define SCL_FREQUENCY 0x02
+#define SCL_PLOT 0x03
+
 #define NODEMCU32S
 #if defined(NODEMCU32S)
 #define TFT_CS SS
@@ -103,9 +108,37 @@ void loop() {
   // Serial.println(tEnd-tStart);
 
   FFT = arduinoFFT(vReal, vImag, samples, samplingFrequency); /* Create FFT object */
+  // /* Print the results of the sampling according to time */
+  // Serial.println("Data:");
+  // PrintVector(vReal, samples, SCL_TIME);
+
   FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);            /* Weigh data */
+  // Serial.println("Weighed data:");
+  // PrintVector(vReal, samples, SCL_TIME);
+
   FFT.Compute(FFT_FORWARD);                                   /* Compute FFT */
+  // Serial.println("Computed Real values:");
+  // PrintVector(vReal, samples, SCL_INDEX);
+  // Serial.println("Computed Imaginary values:");
+  // PrintVector(vImag, samples, SCL_INDEX);
+
   FFT.ComplexToMagnitude();                                   /* Compute magnitudes */
+  // Serial.println("Computed magnitudes:");
+  // PrintVector(vReal, (samples >> 1), SCL_FREQUENCY);
+
+  // int peak=FFT.MajorPeak();
+  // Serial.print(peak);
+  // Serial.print(" ");
+  // int vM=0;
+  // for(int p=0;p<samples >> 1;p++)
+  // {
+  //   if(vReal[p]>vM) vM=vReal[p];
+  // }
+  // Serial.print(vM);
+  // Serial.println();
+
+  // while(true);
+
 
   int xMultiplier=1;//set this to something > 1 to print same data to multiple x so that the chart timeline looks faster
   for(int k=0;k<xMultiplier;k++)
@@ -116,11 +149,24 @@ void loop() {
     //there are samples/2 magnitude data
     //ranged from 0 hz to samplingFrequency / 2 hz
 
+    //magnitude range from 0 to 370k (max) or 100k (typical high) at adc0~4096   WHY??
+
+
     if(samples==512)
     {
       //sample 512, mag 256, y240
+
+      // //default
+      // for (int y = 239; y >= 0; y--) {
+      //   tft.drawPixel(x, y, vReal[239 - y]);
+      // }
+
+      //monochrome
       for (int y = 239; y >= 0; y--) {
-        tft.drawPixel(x, y, vReal[239 - y]);
+        int g=vReal[239 - y]/100000*32;
+        if(g>32)g=32;
+        int color=g*32*64+g*32*2+g;
+        tft.drawPixel(x, y, color);
       }
     }
     else if (samples==256)
@@ -144,4 +190,31 @@ void loop() {
 
   x++;
   if (x >= 320) x = 0;
+}
+
+void PrintVector(double *vData, uint16_t bufferSize, uint8_t scaleType)
+{
+  for (uint16_t i = 0; i < bufferSize; i++)
+  {
+    double abscissa;
+    /* Print abscissa value */
+    switch (scaleType)
+    {
+      case SCL_INDEX:
+        abscissa = (i * 1.0);
+	break;
+      case SCL_TIME:
+        abscissa = ((i * 1.0) / samplingFrequency);
+	break;
+      case SCL_FREQUENCY:
+        abscissa = ((i * 1.0 * samplingFrequency) / samples);
+	break;
+    }
+    Serial.print(abscissa, 6);
+    if(scaleType==SCL_FREQUENCY)
+      Serial.print("Hz");
+    Serial.print(" ");
+    Serial.println(vData[i], 4);
+  }
+  Serial.println();
 }
