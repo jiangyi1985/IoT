@@ -42,7 +42,7 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
 #define CHANNEL 32
 const uint16_t samples = 512;            //This value MUST ALWAYS be a power of 2
-const double samplingFrequency = 10000;  //Hz, must be less than 10000 due to ADC
+const double samplingFrequency = 5000;  //Hz, must be less than 10000 due to ADC
 unsigned int sampling_period_us;
 unsigned long microseconds;
 double vReal[samples];
@@ -91,6 +91,21 @@ short lastMinV[320];
 short lastMax = 0, lastMin = 0;
 
 void loop() {
+  // //test colormap
+  // for(int g=0;g<256;g++)
+  // {
+  //   int c=grayToColor16Jet(g);
+  //   tft.drawLine(g,0,g,239,c);
+  //   Serial.print(g);
+  //   Serial.print(" ");
+  //   Serial.print(c,BIN);
+  //   Serial.print(" ");
+  //   Serial.print(c,HEX);
+  //   Serial.println();
+  // }
+  // while(true);
+
+
   // int tStart=millis();
 
   /*SAMPLING*/
@@ -126,16 +141,39 @@ void loop() {
   // Serial.println("Computed magnitudes:");
   // PrintVector(vReal, (samples >> 1), SCL_FREQUENCY);
 
-  // int peak=FFT.MajorPeak();
-  // Serial.print(peak);
-  // Serial.print(" ");
-  // int vM=0;
-  // for(int p=0;p<samples >> 1;p++)
-  // {
-  //   if(vReal[p]>vM) vM=vReal[p];
-  // }
-  // Serial.print(vM);
-  // Serial.println();
+  int peak=FFT.MajorPeak();
+  Serial.print("peak:");
+  Serial.print(peak);
+  Serial.print(" ");
+  int p1=-1,vM1=0;
+  int p2=-1,vM2=0;
+  for(int p=0;p<samples >> 1;p++)
+  {
+    if(vReal[p]>vM1)
+    {
+      vM1=vReal[p];
+      p1=p;
+    }
+    if(p>1 && vReal[p]>vM2)
+    {
+      vM2=vReal[p];
+      p2=p;
+    }
+  }
+  Serial.print("max1:");
+  Serial.print(vM1);
+  Serial.print(" ");
+  Serial.print("p1:");
+  Serial.print(p1);
+  Serial.print(" ");
+  Serial.print("max2:");
+  Serial.print(vM2);
+  Serial.print(" ");
+  Serial.print("p2:");
+  Serial.print(p2);
+  Serial.print(" ");
+  
+  Serial.println();
 
   // while(true);
 
@@ -145,11 +183,14 @@ void loop() {
   {
     //----print to screen-----
     tft.drawLine(x, 0, x, 239, ST77XX_BLACK);  //clear vertical line
+    tft.drawLine(x+1,0,x+1,239,ST77XX_BLACK);//better indication of where the scan line is
 
+    //--------------------------------------------------
     //there are samples/2 magnitude data
     //ranged from 0 hz to samplingFrequency / 2 hz
-
-    //magnitude range from 0 to 370k (max) or 100k (typical high) at adc0~4096   WHY??
+    //
+    //magnitude range from 0 to 370k (max) or 100k (typical high) at adc 0~4096   WHY??
+    //--------------------------------------------------
 
 
     if(samples==512)
@@ -161,11 +202,19 @@ void loop() {
       //   tft.drawPixel(x, y, vReal[239 - y]);
       // }
 
-      //monochrome
+      // //monochrome
+      // for (int y = 239; y >= 0; y--) {
+      //   int g=vReal[239 - y]/100000*32;
+      //   if(g>32) g=32;
+      //   int color=g*32*64+g*32*2+g;
+      //   tft.drawPixel(x, y, color);
+      // }
+
+      //colormap:jet
       for (int y = 239; y >= 0; y--) {
-        int g=vReal[239 - y]/100000*32;
-        if(g>32)g=32;
-        int color=g*32*64+g*32*2+g;
+        int g=vReal[239 - y]/100000*255;
+        if(g>255) g=255;
+        int color=grayToColor16Jet(g);
         tft.drawPixel(x, y, color);
       }
     }
@@ -217,4 +266,26 @@ void PrintVector(double *vData, uint16_t bufferSize, uint8_t scaleType)
     Serial.println(vData[i], 4);
   }
   Serial.println();
+}
+
+//inspired by: https://blog.csdn.net/qq_41498261/article/details/109603986
+int grayToColor16Jet(int grayScale)
+{
+  int g=grayScale;//0~255
+
+  if(g<0)
+    return 0;
+  if(g<32)
+    return 15+g/2; //b:15~31
+  else if(g<96)
+    return 31 + (g-32)*32; //g:0~63 b:31
+  else if(g<160)
+    return (31-(g-96)/2) + 63*32 + (g-96)/2*32*64;//b:31~0 g:63 r:0~31
+  else if(g<224)
+    return (63-(g-160))*32 + 31*32*64;//b:0 g:63~0 r:31
+  else if(g<256)
+    return (31-(g-224)/2)*32*64;//b:0 g:0 r:31~0
+  else
+    return 15*32*64;
+    // return 65535;
 }
