@@ -165,17 +165,15 @@ void loop() {
     // tft.drawLine(x,minY,x,maxY,ST77XX_WHITE);
 
     //-----lines-----
+    tft.drawLine(x,0,x,239,ST77XX_BLACK);
+    tft.drawLine(x+1,0,x+1,239,ST77XX_BLACK);//better indication of where the scan line is
     if(x>0)
     {
-      tft.drawLine(x,0,x,239,ST77XX_BLACK);
-      
       tft.drawLine(x-1,239-lastMax,x,239-maxY,ST77XX_WHITE);
       tft.drawLine(x-1,239-lastMin,x,239-minY,ST77XX_WHITE);
     }
     else
     {
-      tft.drawLine(x,0,x,239,ST77XX_BLACK);
-
       tft.drawPixel(x,maxY,ST77XX_WHITE);
       tft.drawPixel(x,minY,ST77XX_WHITE);
     }
