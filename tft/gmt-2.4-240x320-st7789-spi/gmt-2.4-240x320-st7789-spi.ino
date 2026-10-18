@@ -1,4 +1,4 @@
-//TFT80x160 UNO NodeMCU-32S
+//TFT       UNO NodeMCU-32S
 //SCL       13  18
 //SDA       11  23
 //RST       9   16
@@ -37,7 +37,6 @@
  **************************************************************************/
 
 #include <Adafruit_GFX.h>    // Core graphics library //https://github.com/adafruit/Adafruit-GFX-Library
-// #include "Adafruit_ST7735.h" // Hardware-specific library for ST7735 //https://github.com/adafruit/Adafruit-ST7735-Library //MODIFIED for 金逸晨 0.96-8pin13p_ips 
 #include "Adafruit_ST7789.h" // Hardware-specific library for ST7789
 #include <SPI.h>
 
