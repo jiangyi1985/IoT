@@ -91,7 +91,7 @@ void setup() {
   
   // Power stabilization delay for cold boots
   delay(1000); 
-
+  
   Wire.begin();
 
   // Screen Initialization
