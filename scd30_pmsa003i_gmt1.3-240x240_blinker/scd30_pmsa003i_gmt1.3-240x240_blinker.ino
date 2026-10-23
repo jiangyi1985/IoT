@@ -179,8 +179,8 @@ void loop() {
     //printInfo(data);
   }
 
-  // 3. Alternate display view exactly every 1000ms (1 second)
-  if (millis() - lastDisplayToggle >= 1000) {
+  // 3. Alternate display view exactly every 2000ms (2 second)
+  if (millis() - lastDisplayToggle >= 2000) {
     lastDisplayToggle = millis();
     
     tft.setCursor(0, 0);
@@ -197,7 +197,7 @@ void loop() {
       tft.println();
       
       tft.setTextSize(13);        // Maximize font scale for full screen display
-      tft.setTextColor(0xFE1A);  // Orange-Red
+      tft.setTextColor(getAQIColor(PM25AQIus));  // color based on value
       tft.println(PM25AQIus);
     } 
     else {
@@ -209,7 +209,7 @@ void loop() {
       tft.println();
       tft.setTextSize(1); tft.println();
       tft.setTextSize(6); 
-      tft.setTextColor(0xFE1A); // Orange-Red
+      tft.setTextColor(getAQIColor(PM25AQIus)); // color based on value
       tft.println(PM25AQIus); 
 
       // Render PM2.5 China AQI
@@ -219,7 +219,7 @@ void loop() {
       tft.println();
       tft.setTextSize(1); tft.println();
       tft.setTextSize(6);
-      tft.setTextColor(0xBF1F); // Cyan-Blue
+      tft.setTextColor(getAQIColor(PM25AQIchina)); // color based on value
       tft.println(PM25AQIchina);
 
       // Render CO2
@@ -237,7 +237,7 @@ void loop() {
   }
 
   // Blinker system polling tasks
-  Blinker.delay(1000);
+  Blinker.delay(2000);
   Blinker.run();
 }
 
@@ -262,4 +262,14 @@ void heartbeat() {
     NumberPm100aqiUS.print(PM100AQIus);
     NumberPm25aqiCN.print(PM25AQIchina);
     NumberPm100aqiCN.print(PM100AQIchina);
+}
+
+// Helper function to return RGB565 code based on the chart image
+uint16_t getAQIColor(int aqiValue) {
+  if (aqiValue <= 50)  return 0x4426; // Good (Green)
+  if (aqiValue <= 100) return 0xF64A; // Moderate (Yellow)
+  if (aqiValue <= 150) return 0xDD06; // Unhealthy for Sensitive Groups (Orange)
+  if (aqiValue <= 200) return 0xB104; // Unhealthy (Red/Crimson)
+  if (aqiValue <= 300) return 0x6012; // Very Unhealthy (Purple)
+  return 0x5802;                      // 300+ Hazardous (Dark Maroon)
 }
