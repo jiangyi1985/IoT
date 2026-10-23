@@ -74,7 +74,7 @@ void loop() {
   T = temp.temperature;
   RH = humidity.relative_humidity;
 
-  if (T >= 26) isNotify = true;
+  if (T > 30 || T < 18) isNotify = true;
   else isNotify = false;
 
   Serial.print("Humidity:");  //向串口打印 Humidity:

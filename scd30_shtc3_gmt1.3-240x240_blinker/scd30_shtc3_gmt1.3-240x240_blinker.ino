@@ -1,4 +1,4 @@
-//TFT80x160 NodeMCU-32S
+//TFT       NodeMCU-32S
 //SCL       18
 //SDA       23
 //RST       16

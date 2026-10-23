@@ -12,7 +12,8 @@
 
 //Compile with Partition Scheme Hughe APP if not enough space
 
-#include "AudioTools.h"
+#include "AudioTools.h"//https://github.com/pschatzmann/arduino-audio-tools
+//download and put in \ArduinoCache\User\libraries
 
 // #include "door-open-1-click-low_22050-1-16.h"
 // #include "door-open-1-click-high_22050-1-16.h"

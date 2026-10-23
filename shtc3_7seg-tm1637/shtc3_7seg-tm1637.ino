@@ -13,8 +13,8 @@
 #include "TM1637.h"
 
 SHTC3 mySHTC3;
-const int CLK = 9;//bw16 PA15
-const int DIO = 2;//bw16 PA27
+const int CLK = 17;//bw16 PA15
+const int DIO = 16;//bw16 PA27
 TM1637 tm1637(CLK, DIO);
 
 void setup(){ //初始化函数，只在程序开始时运行一次
