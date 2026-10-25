@@ -70,7 +70,7 @@ double getAWeighting(double frequency) {
 }
 
 void setup() {
-  Serial.begin(921600);
+  Serial.begin(115200);
   while(!Serial); 
   
   // Initialize LCD display and turn on backlight
@@ -160,49 +160,46 @@ void loop() {
   // Every 1 second (1000ms), rotate and update the rolling history windows
   if (current_time - last_second_timestamp >= 1000) {
     last_second_timestamp = current_time;
-    
+
+    // 1. Capture the 1-second max for real-time display before resetting it
+    int display_rt = (int)round(current_second_max);
+
+    // 2. Shift history and push current second to the array
     history_10s[history_index] = current_second_max;
     history_index = (history_index + 1) % 10;
-    
-    // Reset secondary block maximum accumulator
-    current_second_max = dBA;
-  }
 
-  // Derive the global absolute peak over the 10-second history window arrays
-  double max_10s = 30.0;
-  for (int i = 0; i < 10; i++) {
-    if (history_10s[i] > max_10s) {
-      max_10s = history_10s[i];
+    // 3. Derive the global absolute peak over the 10-second history window arrays
+    double max_10s = 30.0;
+    for (int i = 0; i < 10; i++) {
+      if (history_10s[i] > max_10s) {
+        max_10s = history_10s[i];
+      }
     }
-  }
-
-  // Convert floats to direct display integers to match font mapping criteria
-  int display_rt = (int)round(dBA);
-  int display_max = (int)round(max_10s);
-
-  // Update Display elements at a throttled frame-rate to clear buffer strains
-  static unsigned long last_lcd_update = 0;
-  if (current_time - last_lcd_update >= 200) { 
-    last_lcd_update = current_time;
-
-    // Render Max 10s Window on the LEFT side (Columns 0 and 4) if changed
+    int display_max = (int)round(max_10s);
+    
+    // 4. Render Max 10s Window (Columns 0 and 3) if changed
     if (display_max != last_rendered_max) {
       last_rendered_max = display_max;
       int max_tens = display_max / 10;
       int max_ones = display_max % 10;
       
+      font3x3.loadchars(lcd); // Dynamic character swap for 3x3 font map
       font3x3.printbigchar(lcd, max_tens, 0, 1);
       font3x3.printbigchar(lcd, max_ones, 3, 1);
     }
 
-    // Render Realtime Level on the RIGHT side (Columns 11 and 15) if changed
+    // 5. Render Realtime Level on the RIGHT side (Columns 12 and 16) if changed
     if (display_rt != last_rendered_rt) {
       last_rendered_rt = display_rt;
       int rt_tens = display_rt / 10;
       int rt_ones = display_rt % 10;
       
+      font4x4.loadchars(lcd); // Dynamic character swap for 4x4 font map
       font4x4.printbigchar(lcd, rt_tens, 12, 0);
       font4x4.printbigchar(lcd, rt_ones, 16, 0);
     }
+
+    // 6. Reset maximum accumulator with current baseline for the next 1-second cycle
+    current_second_max = dBA;
   }
 }

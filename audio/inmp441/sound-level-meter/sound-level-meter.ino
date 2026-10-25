@@ -1,3 +1,25 @@
+/*
+ * ====================================================================
+ *              ESP32 I2S MICROPHONE PIN CONNECTIONS
+ * ====================================================================
+ * Connect your I2S Microphone (e.g., INMP441, SPH0645) to the ESP32
+ * using the following hardware layout:
+ * 
+ *   ESP32 Pin     -->   Microphone Pin    [Function Name in Code]
+ *   ------------------------------------------------------------
+ *   GPIO 26       -->   SCK / BCLK        [I2S_SCK]
+ *   GPIO 25       -->   WS  / LRCLK       [I2S_WS]
+ *   GPIO 33       -->   SD  / DATA        [I2S_MIC_SD]
+ *   3V3           -->   VDD / VCC         [Power Supply]
+ *   GND           -->   GND               [Ground]
+ *   GND           -->   L/R               [Left Channel Select]*
+ * 
+ * * CRITICAL NOTE: The L/R (Left/Right) pin must be physically wired to 
+ *   GND. This locks the microphone to the Left channel to match the 
+ *   Mono (1 channel) setting configured in your audio setup.
+ * ====================================================================
+ */
+
 /**
  * ESP32 I2S Microphone Real-Time A-Weighted Sound Level Meter (dBA)
  * Formatted as a rock-solid, frozen terminal display running at 5 FPS.
